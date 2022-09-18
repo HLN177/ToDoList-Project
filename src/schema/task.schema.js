@@ -5,21 +5,22 @@ const payload = {
     TaskName: string({
       required_error: "TaskName is required"
     }).min(1),
-    StartDate: string({
-      required_error: "StartDate is required"
-    }),
-    DueDate: string({
-      required_error: "DueDate is required"
-    })
-    // StartDate: preprocess(arg => {
-    //   if (typeof arg === 'string' || arg instanceof Date) {
-    //     return new Date(arg);
-    //   }
-    // }, date()).safeParse(),
-    // DueDate: date({
-    //   required_error: "DueDate is required",
-    //   invalid_type_error: "That's not a date"
-    // })
+    StartDate: preprocess(arg => {
+      if (typeof arg === 'string' || arg instanceof Date) {
+        return new Date(arg);
+      }
+    }, date({
+      required_error: "StartDate is required",
+      invalid_type_error: "That's not a date!"
+    })),
+    DueDate: preprocess(arg => {
+      if (typeof arg === 'string' || arg instanceof Date) {
+        return new Date(arg);
+      }
+    }, date({
+      required_error: "DueDate is required",
+      invalid_type_error: "That's not a date!"
+    })),
   })
 };
 

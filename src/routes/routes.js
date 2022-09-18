@@ -1,13 +1,7 @@
 const { createTaskSchema, updateTaskSchema, deleteTaskSchema } = require('../schema/task.schema');
 const { createTaskHandler, getTaskListHandler, updateTaskHandler, deleteTaskHandler } = require('../controller/task.controller');
-const {
-  createProjectHandler,
-  getProjectListHandler,
-  updateProjectHandler,
-  deleteProjectHandler,
-  addTasksToProjectHandler,
-  getTasksByProjectNameHandler
-} = require('../controller/project.controller');
+const { createProjectSchema, updateProjectSchema, deleteProjectSchema, addTaskToProjectSchema, getTaskByProjectnameSchema } = require('../schema/project.schema');
+const { createProjectHandler, getProjectListHandler, updateProjectHandler, deleteProjectHandler,  addTasksToProjectHandler,  getTasksByProjectNameHandler} = require('../controller/project.controller');
 const validate = require('../middleware/validateResource');
 
 function routes(app) {
@@ -24,18 +18,18 @@ function routes(app) {
   .delete([validate(deleteTaskSchema)], deleteTaskHandler);
 
   app.route('/api/project')
-  .post([], createProjectHandler)
+  .post([validate(createProjectSchema)], createProjectHandler)
   .get(getProjectListHandler);
 
   app.route('/api/project/:projectId')
-  .put([], updateProjectHandler)
-  .delete([], deleteProjectHandler);
+  .put([validate(updateProjectSchema)], updateProjectHandler)
+  .delete([validate(deleteProjectSchema)], deleteProjectHandler);
 
   app.route('/api/project/addTasksToProject')
-  .post([], addTasksToProjectHandler);
+  .post([validate(addTaskToProjectSchema)], addTasksToProjectHandler);
 
   app.route('/api/project/getTaskByProjectName')
-  .get([], getTasksByProjectNameHandler);
+  .get([validate(getTaskByProjectnameSchema)], getTasksByProjectNameHandler);
 }
 
 module.exports = routes;
