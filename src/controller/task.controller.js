@@ -10,8 +10,10 @@ async function createTaskHandler(req, res) {
       Status: 'to-do',
       DoneDate: ''
     };
-    const taskRes = await createTask(task);
-    return res.send(taskRes);
+    const { insertedId } = await createTask(task);
+    return res.send({
+      taskId: insertedId
+    });
   } catch (err) {
     return res.status(500).send(err);
   }
@@ -41,30 +43,25 @@ async function getTaskListHandler(req, res) {
 }
 
 async function updateTaskHandler(req, res) {
-  const {TaskName, StartDate, DueDate, Status, DoneDate} = req.body;
   const newTask = {
-    TaskName,
-    StartDate,
-    DueDate,
-    Status,
-    DoneDate
+    ...req.body
   };
   const {taskId} = req.params;
   try {
-    const result = await updateTask(taskId, newTask);
-    return res.send(result);
+    await updateTask(taskId, newTask);
+    return res.sendStatus(200);
   } catch (err) {
-    return res.status(404).send(err);
+    return res.status(404).send(err.message);
   }
 }
 
 async function deleteTaskHandler(req, res) {
   const {taskId} = req.params;
   try {
-    const result = await deleteTask(taskId);
-    return res.send(result);
+    await deleteTask(taskId);
+    return res.sendStatus(200);
   } catch (err) {
-    return res.status(404).send(err);
+    return res.status(404).send(err.message);
   }
 }
 

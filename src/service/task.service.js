@@ -30,8 +30,10 @@ async function updateTask(id, newTask) {
   const query = {
     _id: ObjectID(id)
   };
-  const result = await dbConnect.collection('tasks').updateOne(query, { $set: newTask});
-  return result;
+  const {modifiedCount, matchedCount} = await dbConnect.collection('tasks').updateOne(query, { $set: newTask});
+  if (!modifiedCount && !matchedCount) {
+    throw new Error('Task does not exists');
+  }
 }
 
 async function deleteTask(id) {
@@ -39,9 +41,10 @@ async function deleteTask(id) {
   const query = {
     _id: ObjectID(id)
   };
-  console.log(query);
-  const result = await dbConnect.collection('tasks').deleteOne(query);
-  return result;
+  const {deletedCount} = await dbConnect.collection('tasks').deleteOne(query);
+  if (!deletedCount) {
+    throw new Error('Task does not exists');
+  }
 }
 
 module.exports = {

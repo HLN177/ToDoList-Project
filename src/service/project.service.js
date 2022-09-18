@@ -18,8 +18,10 @@ async function updateProject(id, newProject) {
   const query = {
     _id: ObjectID(id)
   };
-  const result = await dbConnect.collection('projects').updateOne(query, { $set: newProject});
-  return result;
+  const {modifiedCount, matchedCount} = await dbConnect.collection('projects').updateOne(query, { $set: newProject});
+  if (!modifiedCount && !matchedCount) {
+    throw new Error('Project does not exists');
+  }
 }
 
 async function deleteProject(id) {
@@ -27,8 +29,10 @@ async function deleteProject(id) {
   const query = {
     _id: ObjectID(id)
   };
-  const result = await dbConnect.collection('projects').deleteOne(query);
-  return result;
+  const {deletedCount} = await dbConnect.collection('projects').deleteOne(query);
+  if (!deletedCount) {
+    throw new Error('Project does not exists');
+  }
 }
 
 async function addTasks(projectId, taskId) {
@@ -36,10 +40,6 @@ async function addTasks(projectId, taskId) {
   const query = {
     _id: ObjectID(projectId)
   };
-  console.log({
-    projectId,
-    taskId
-  });
   const result = await dbConnect.collection('projects').updateOne(query, {
     $addToSet: { Tasks: taskId }
   });
