@@ -20,6 +20,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "eslint": "^8.23.1",
     "nodemon": "^2.0.20",
     "pino-pretty": "^9.1.0"
   }

@@ -42,12 +42,8 @@ async function addTasks(projectId, taskId) {
   });
   const result = await dbConnect.collection('projects').updateOne(query, {
     $addToSet: { Tasks: taskId }
-  })
+  });
   return result;
-}
-
-async function getTasksByProjectName(name) {
-
 }
 
 module.exports = {
@@ -55,6 +51,5 @@ module.exports = {
   getProjects,
   updateProject,
   deleteProject,
-  addTasks,
-  getTasksByProjectName
+  addTasks
 };

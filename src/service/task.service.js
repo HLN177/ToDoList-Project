@@ -20,7 +20,7 @@ async function getTasksByIds(ids) {
       _id: ObjectID(item)
     };
     return getTasks(query);
-  })
+  });
   const result = await Promise.all(tasks);
   return result.flat();
 }

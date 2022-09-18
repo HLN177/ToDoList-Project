@@ -3,8 +3,7 @@ const {
   getProjects,
   updateProject,
   deleteProject,
-  addTasks,
-  getTasksByProjectName
+  addTasks
 } = require('../service/project.service');
 
 const {
@@ -20,9 +19,8 @@ async function createProjectHandler(req, res) {
     const dbRes = await createProject(project);
     return res.send(dbRes);
   } catch (err) {
-    return res.status(500).send(error);
+    return res.status(500).send(err);
   }
-  return res.send(200);
 }
 
 async function getProjectListHandler(req, res) {
@@ -58,8 +56,8 @@ async function deleteProjectHandler(req, res) {
   try {
     const result = await deleteProject(projectId);
     return res.send(result);
-  } catch(err) {
-    return res.status(404).send(error);
+  } catch (err) {
+    return res.status(404).send(err);
   }
 }
 
@@ -69,7 +67,7 @@ async function addTasksToProjectHandler(req, res) {
     const result = await addTasks(ProjectId, TaskId);
     return res.send(result);
   } catch (err) {
-    return res.status(404).send(error);
+    return res.status(404).send(err);
   }
 }
 
@@ -86,7 +84,7 @@ async function getTasksByProjectNameHandler(req, res) {
     const taskList = await getTasksByIds(taskIds);
     return res.send(taskList);
   } catch (err) {
-    return res.status(404).send(error);
+    return res.status(404).send(err);
   }
 }
 

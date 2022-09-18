@@ -12,8 +12,8 @@ async function createTaskHandler(req, res) {
     };
     const taskRes = await createTask(task);
     return res.send(taskRes);
-  } catch (error) {
-    return res.status(500).send(error);
+  } catch (err) {
+    return res.status(500).send(err);
   }
 }
 
@@ -26,7 +26,7 @@ async function getTaskListHandler(req, res) {
     query.Status = status;
   }
   if (name) {
-    query.TaskName = new RegExp(`${name}`, "i"); 
+    query.TaskName = new RegExp(`${name}`, "i");
   }
   if (sortBy) {
     sort[sortBy] = isAsc;
@@ -35,8 +35,8 @@ async function getTaskListHandler(req, res) {
   try {
     const taskList = await getTasks(query, sort);
     return res.send(taskList);
-  } catch (error) {
-    return res.status(500).send(error);
+  } catch (err) {
+    return res.status(500).send(err);
   }
 }
 
@@ -53,8 +53,8 @@ async function updateTaskHandler(req, res) {
   try {
     const result = await updateTask(taskId, newTask);
     return res.send(result);
-  } catch (error) {
-    return res.status(404).send(error);
+  } catch (err) {
+    return res.status(404).send(err);
   }
 }
 
@@ -63,8 +63,8 @@ async function deleteTaskHandler(req, res) {
   try {
     const result = await deleteTask(taskId);
     return res.send(result);
-  } catch(err) {
-    return res.status(404).send(error);
+  } catch (err) {
+    return res.status(404).send(err);
   }
 }
 

@@ -7,10 +7,10 @@ const validate = schema => {
         params: req.params
       });
       next();
-    } catch(err) {
+    } catch (err) {
       return res.status(400).send(err.errors);
     }
   };
-}
+};
 
 module.exports = validate;

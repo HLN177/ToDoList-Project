@@ -10,26 +10,26 @@ function routes(app) {
   });
 
   app.route('/api/task')
-  .post([validate(createTaskSchema)], createTaskHandler)
-  .get(getTaskListHandler);
+    .post([validate(createTaskSchema)], createTaskHandler)
+    .get(getTaskListHandler);
 
   app.route('/api/task/:taskId')
-  .put([validate(updateTaskSchema)], updateTaskHandler)
-  .delete([validate(deleteTaskSchema)], deleteTaskHandler);
+    .put([validate(updateTaskSchema)], updateTaskHandler)
+    .delete([validate(deleteTaskSchema)], deleteTaskHandler);
 
   app.route('/api/project')
-  .post([validate(createProjectSchema)], createProjectHandler)
-  .get(getProjectListHandler);
+    .post([validate(createProjectSchema)], createProjectHandler)
+    .get(getProjectListHandler);
 
   app.route('/api/project/:projectId')
-  .put([validate(updateProjectSchema)], updateProjectHandler)
-  .delete([validate(deleteProjectSchema)], deleteProjectHandler);
+    .put([validate(updateProjectSchema)], updateProjectHandler)
+    .delete([validate(deleteProjectSchema)], deleteProjectHandler);
 
   app.route('/api/project/addTasksToProject')
-  .post([validate(addTaskToProjectSchema)], addTasksToProjectHandler);
+    .post([validate(addTaskToProjectSchema)], addTasksToProjectHandler);
 
   app.route('/api/project/getTaskByProjectName')
-  .get([validate(getTaskByProjectnameSchema)], getTasksByProjectNameHandler);
+    .get([validate(getTaskByProjectnameSchema)], getTasksByProjectNameHandler);
 }
 
 module.exports = routes;

@@ -1,4 +1,4 @@
-const {object, string, number, date, preprocess} = require('zod');
+const {object, string, date, preprocess} = require('zod');
 
 const payload = {
   body: object({
