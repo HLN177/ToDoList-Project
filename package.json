@@ -1,0 +1,26 @@
+{
+  "name": "todolist-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "server": "nodemon src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "HLN177",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "config": "^3.3.8",
+    "dayjs": "^1.11.5",
+    "express": "^4.18.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^4.9.1",
+    "pino": "^8.5.0",
+    "zod": "^3.19.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "pino-pretty": "^9.1.0"
+  }
+}

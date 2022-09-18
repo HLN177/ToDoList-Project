@@ -1,0 +1,9 @@
+{
+  "dbConfig": {
+    "host": "localhost",
+    "port": "27017"
+  },
+  "serverConfig": {
+    "port": 3000
+  }
+}
