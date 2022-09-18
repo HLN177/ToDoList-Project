@@ -1,3 +1,8 @@
+/**
+ * using zod library to validate the request params
+ * @param {*} schema zod
+ * @returns
+ */
 const validate = schema => {
   return (req, res, next) => {
     try {

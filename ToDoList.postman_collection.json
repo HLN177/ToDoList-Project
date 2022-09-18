@@ -1,0 +1,432 @@
+{
+	"info": {
+		"_postman_id": "d151729d-1822-4acf-b102-e382c495e4a3",
+		"name": "ToDoList",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12132502"
+	},
+	"item": [
+		{
+			"name": "task",
+			"item": [
+				{
+					"name": "create task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let res = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"taskId\", res.taskId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"TaskName\": \"HL\",\n    \"StartDate\": \"2022-9-11\",\n    \"DueDate\": \"2022-9-30\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/task",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create task 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let res = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"taskId2\", res.taskId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"TaskName\": \"HL123\",\n    \"StartDate\": \"2022-9-11\",\n    \"DueDate\": \"2022-9-30\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/task",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/task",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update task",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"TaskName\": \"HLtest\",\n    \"StartDate\": \"2022-8-17\",\n    \"DueDate\": \"2022-10-30\",\n    \"Status\": \"done\",\n    \"DoneDate\": \"2022-9-20\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/task/{{taskId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"task",
+								"{{taskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/task/{{taskId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"task",
+								"{{taskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query by condition",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/task?status=to-do&name=HL&sortBy=DoneDate&isAsc=-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"task"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "to-do",
+									"description": "value: done / to-do"
+								},
+								{
+									"key": "name",
+									"value": "HL",
+									"description": "project name"
+								},
+								{
+									"key": "sortBy",
+									"value": "DoneDate",
+									"description": "StartDate / DueDate / DoneDate"
+								},
+								{
+									"key": "isAsc",
+									"value": "-1",
+									"description": "value: 1 / -1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "project",
+			"item": [
+				{
+					"name": "create project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let res = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"projectId\", res.projectId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ProjectName\": \"project2\",\n    \"StartDate\": \"2022-9-18\",\n    \"DueDate\": \"2022-9-30\",\n    \"Tasks\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/project",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete project",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/project/{{projectId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get project",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/project",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update project",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ProjectName\": \"project2\",\n    \"StartDate\": \"2022-9-19\",\n    \"DueDate\": \"2022-9-31\",\n    \"Tasks\": [\"{{taskId}}\", \"{{taskId2}}\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/project/{{projectId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"{{projectId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add tasks",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ProjectId\": \"{{projectId}}\",\n    \"TaskId\": \"{{taskId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/project/addTasksToProject",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"addTasksToProject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter tasks by project name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/project/getTaskByProjectName?name=project1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"project",
+								"getTaskByProjectName"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "project1",
+									"description": "project name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query by sort",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/project?sortBy=StartDate&isAsc=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"project"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "StartDate",
+									"description": "StartDate / DueDate / DoneDate"
+								},
+								{
+									"key": "isAsc",
+									"value": "1",
+									"description": "value: 1 / -1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host\n",
+			"value": "localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "taskId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "projectId",
+			"value": ""
+		},
+		{
+			"key": "taskId2",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

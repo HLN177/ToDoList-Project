@@ -7,6 +7,15 @@ async function createProject(project) {
   return result;
 }
 
+async function getProjectById(id) {
+  const dbConnect = getDb();
+  const query = {
+    _id: ObjectID(id)
+  };
+  const result = await dbConnect.collection('projects').findOne(query);
+  return result;
+}
+
 async function getProjects(query = {}, sort = {}) {
   const dbConnect = getDb();
   const result = await dbConnect.collection('projects').find(query).sort(sort).toArray();
@@ -49,6 +58,7 @@ async function addTasks(projectId, taskId) {
 module.exports = {
   createProject,
   getProjects,
+  getProjectById,
   updateProject,
   deleteProject,
   addTasks

@@ -6,7 +6,7 @@ const {host, port} = config.get('dbConfig');
 const uri = `mongodb://${host}:${port}/`;
 const client = new MongoClient(uri);
 
-let dbConnection;
+let dbConnection; // db connection instance
 
 module.exports = {
   connectToServer: async () => {
@@ -15,7 +15,7 @@ module.exports = {
       dbConnection = client.db('todoList');
       logger.info('Database connected!');
     } catch (error) {
-      logger.error(`Could not connect to database, message: ${err}`);
+      logger.error(`Could not connect to database, message: ${error}`);
       process.exit(1);
     }
   },

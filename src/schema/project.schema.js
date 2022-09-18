@@ -21,6 +21,7 @@ const payload = {
       required_error: "Due Date is required",
       invalid_type_error: "That's not a date!"
     })),
+    Tasks: string().optional().array()
   })
 };
 
@@ -47,10 +48,10 @@ const deleteProjectSchema = object({
 
 const addTaskToProjectSchema = object({
   body: object({
-    projectId: string({
+    ProjectId: string({
       required_error: "ProjectID is required"
     }),
-    taskId: string({
+    TaskId: string({
       required_error: "TaskId is required"
     })
   })

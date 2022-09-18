@@ -8,15 +8,21 @@ const {
 
 const {
   getTasksByIds
+  // updateBindProject,
 } = require('../service/task.service');
 
 async function createProjectHandler(req, res) {
+  // init project
   const project = {
     ...req.body,
     DoneDate: ''
   };
   try {
     const {insertedId} = await createProject(project);
+    // const {Tasks} = req.body;
+    // if (Array.isArray(Tasks) && Tasks.length) {
+    //   await updateBindProject(Tasks, insertedId);
+    // }
     return res.send({
       projectId: insertedId
     });
@@ -25,6 +31,13 @@ async function createProjectHandler(req, res) {
   }
 }
 
+/**
+ * getProjectList support search using query, including sortBy and isAsc
+ * status = done / to-do
+ * sortBy = StartDate / DueDate / DoneDate
+ * isAsc = 1 / -1
+ * @returns
+ */
 async function getProjectListHandler(req, res) {
   const query = {};
   const sort = {};
@@ -49,7 +62,7 @@ async function updateProjectHandler(req, res) {
     await updateProject(projectId, project);
     return res.sendStatus(200);
   } catch (err) {
-    return res.status(404).send(err.message);
+    return res.status(404).send(err.message); // not found, return 404
   }
 }
 
@@ -67,6 +80,7 @@ async function addTasksToProjectHandler(req, res) {
   const {ProjectId, TaskId} = req.body;
   try {
     const result = await addTasks(ProjectId, TaskId);
+    // await updateBindProject([TaskId], ProjectId);
     return res.send(result);
   } catch (err) {
     return res.status(404).send(err);
