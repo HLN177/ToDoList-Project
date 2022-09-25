@@ -1,13 +1,32 @@
 const { getDb } = require('../db/connect');
 const ObjectID = require('mongodb').ObjectID;
 
-const { getProjectById, updateProject } = require('./project.service');
+const { deleteProjectRelatedTask } = require('./project.service');
 
-async function createTask(task) {
+// ------------------------Create----------------------
+async function _create(dos) {
   const dbConnect = getDb();
-  const result = await dbConnect.collection('tasks').insertOne(task);
+  const result = await dbConnect.collection('tasks').insertOne(dos);
   return result;
 }
+
+async function createTask(task) {
+  return _create(task);
+}
+
+// -------------------------------Read-------------------------------------
+async function _get(query) {
+  const dbConnect = getDb();
+  const result = await dbConnect.collection('tasks').findOne(query);
+  return result;
+}
+
+async function _getAll(query, sort) {
+  const dbConnect = getDb();
+  const result = await dbConnect.collection('tasks').find(query).sort(sort).toArray();
+  return result;
+}
+
 
 /**
  * query tasks by query filter and sort function
@@ -16,15 +35,17 @@ async function createTask(task) {
  * @returns
  */
 async function getTasks(query = {}, sort = {}) {
-  const dbConnect = getDb();
-  const result = await dbConnect.collection('tasks').find(query).sort(sort).toArray();
-  return result;
+  return _getAll(query, sort);
 }
 
-async function getTask(query = {}) {
-  const dbConnect = getDb();
-  const result = await dbConnect.collection('tasks').findOne(query);
-  return result;
+/**
+ * @param {string} id taskid
+ */
+async function getTaskById(id) {
+  const query = {
+    _id: ObjectID(id)
+  };
+  return _get(query);
 }
 
 /**
@@ -33,13 +54,17 @@ async function getTask(query = {}) {
  * @returns task list
  */
 async function getTasksByIds(ids) {
-  const tasks = ids.map(item => {
-    const query = {
-      _id: ObjectID(item)
-    };
-    return getTask(query);
+  const tasks = ids.map(id => {
+    return getTaskById(id);
   });
   const result = await Promise.all(tasks);
+  return result;
+}
+
+// -------------------------------Update-------------------------------------
+async function _update(query, updateDocument) {
+  const dbConnect = getDb();
+  const result = await dbConnect.collection('tasks').updateOne(query, updateDocument);
   return result;
 }
 
@@ -49,14 +74,47 @@ async function getTasksByIds(ids) {
  * @param {object} newTask new Params
  */
 async function updateTask(id, newTask) {
-  const dbConnect = getDb();
   const query = {
     _id: ObjectID(id)
   };
-  const {modifiedCount, matchedCount} = await dbConnect.collection('tasks').updateOne(query, { $set: newTask});
+  const updateDocument = {
+    $set: newTask
+  };
+  const {modifiedCount, matchedCount} = await _update(query, updateDocument);
   if (!modifiedCount && !matchedCount) {
     throw new Error('Task does not exists');
   }
+}
+
+async function resetTaskRelatedProject(taskId) {
+  const query = {
+    _id: ObjectID(taskId)
+  };
+  const updateDocument = {
+    $set: {linkedProject: ''}
+  };
+  return await _update(query, updateDocument);
+}
+
+
+async function updateTaskLinkedProject(taskId, projectId) {
+  try {
+    // 1. get original project id
+    const {linkedProject} = await getTaskById(taskId);
+    // 2. update linked project on task
+    await updateTask(taskId, {linkedProject: projectId});
+    // 3. delete the task id in original project
+    linkedProject && await deleteProjectRelatedTask(linkedProject, [taskId]);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// -------------------------------Delete-------------------------------------
+async function _delete(query) {
+  const dbConnect = getDb();
+  const result = await dbConnect.collection('tasks').deleteOne(query);
+  return result;
 }
 
 /**
@@ -64,63 +122,22 @@ async function updateTask(id, newTask) {
  * @param {string} id task id
  */
 async function deleteTask(id) {
-  const dbConnect = getDb();
   const query = {
     _id: ObjectID(id)
   };
-  const {deletedCount} = await dbConnect.collection('tasks').deleteOne(query);
+  const {deletedCount} = await _delete(query);
   if (!deletedCount) {
     throw new Error('Task does not exists');
   }
 }
 
-/**
- * move one task from one project to anthor project
- * not finish yet
- * @param {string} taskId TaskId
- * @param {string} projectId ProjectId
- */
-async function updateBindProjectByID(taskId, projectId = '') {
-  const dbConnect = getDb();
-  const query = {
-    _id: ObjectID(taskId)
-  };
-  const {BindWithProject} = await getTask(query);
-  if (BindWithProject) {
-    const project = await getProjectById(BindWithProject);
-    if (project) {
-      const { Tasks } = project;
-      const newTasks = Tasks.filter(item => {
-        return item !== taskId;
-      });
-      await updateProject(projectId, {Tasks: newTasks});
-    }
-  }
-  const {modifiedCount, matchedCount} = await dbConnect.collection('tasks').updateOne(query, { $set: {BindWithProject: projectId}});
-  if (!modifiedCount && !matchedCount) {
-    throw new Error('Task does not exists');
-  }
-}
-
-/**
- * move one task from one project to anthor project
- * not finish yet
- * @param {string} taskId TaskId
- * @param {string} projectId ProjectId
- */
-async function updateBindProject(taskIdArr, projectId = '') {
-  const tasks = taskIdArr.map(item => {
-    return updateBindProjectByID(item, projectId);
-  });
-  await Promise.all(tasks);
-}
-
 module.exports = {
   createTask,
   getTasks,
+  getTaskById,
   getTasksByIds,
   updateTask,
-  deleteTask,
-  updateBindProjectByID,
-  updateBindProject
+  resetTaskRelatedProject,
+  updateTaskLinkedProject,
+  deleteTask
 };

@@ -51,7 +51,7 @@ const addTaskToProjectSchema = object({
     ProjectId: string({
       required_error: "ProjectID is required"
     }),
-    TaskId: string({
+    TaskIds: string({
       required_error: "TaskId is required"
     })
   })

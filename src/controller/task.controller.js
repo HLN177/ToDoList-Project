@@ -1,17 +1,21 @@
-const { createTask, getTasks, updateTask, deleteTask } = require('../service/task.service');
+const { createTask, getTasks, getTaskById, updateTask, deleteTask } = require('../service/task.service');
+
+const { deleteProjectRelatedTask } = require('../service/project.service');
 
 async function createTaskHandler(req, res) {
   try {
-    // init task
+    // 1. init task structure
     const task = {
       ...req.body,
-      BindWithProject: '',
+      linkedProject: '',
       Status: 'to-do',
       DoneDate: ''
     };
+    // 2. create task
     const { insertedId } = await createTask(task);
+    // 3. send back taskId
     return res.send({
-      taskId: insertedId // send back taskId
+      taskId: insertedId
     });
   } catch (err) {
     return res.status(500).send(err);
@@ -28,23 +32,23 @@ async function createTaskHandler(req, res) {
 async function getTaskListHandler(req, res) {
   const query = {};
   const sort = {};
-
+  // 1. get the query and the sort params for db request
   const {status, name, sortBy, isAsc = 1} = req.query;
-  // format db query params
+  // 2. format db query params
   if (status) {
     query.Status = status;
   }
   if (name) {
     query.TaskName = new RegExp(`${name}`, "i"); // filter name by Regex
   }
-
-  // format db sort params
+  // 3. format db sort params
   if (sortBy) {
     sort[sortBy] = isAsc;
   }
-
+  // 4. get tasks list
   try {
     const taskList = await getTasks(query, sort);
+    // 5. send back tasks
     return res.send(taskList);
   } catch (err) {
     return res.status(500).send(err);
@@ -55,9 +59,17 @@ async function updateTaskHandler(req, res) {
   const newTask = {
     ...req.body
   };
-  const {taskId} = req.params; // get taskId from params
+  // 1. get taskId from params
+  const {taskId} = req.params;
   try {
+    // 2. get original project id
+    // const {linkedProject: linkedProjectOld} = await getTaskById(taskId);
+    // 3. update task
     await updateTask(taskId, newTask);
+    // 4. delete the task id in original project
+    // if (linkedProjectOld && (linkedProjectNew !== linkedProjectOld)) {
+    //   await deleteProjectRelatedTask(linkedProjectOld, [taskId]);
+    // }
     return res.sendStatus(200);
   } catch (err) {
     return res.status(404).send(err.message); // not found return 404
@@ -67,7 +79,12 @@ async function updateTaskHandler(req, res) {
 async function deleteTaskHandler(req, res) {
   const {taskId} = req.params;
   try {
+    // 1. get previous project info
+    const {linkedProject} = await getTaskById(taskId);
+    // 2. delete task
     await deleteTask(taskId);
+    // 3. update previous project info
+    linkedProject && await deleteProjectRelatedTask(linkedProject, [taskId]);
     return res.sendStatus(200);
   } catch (err) {
     return res.status(404).send(err.message); // not found return 404
@@ -78,5 +95,5 @@ module.exports = {
   createTaskHandler,
   getTaskListHandler,
   updateTaskHandler,
-  deleteTaskHandler
+  deleteTaskHandler,
 };
