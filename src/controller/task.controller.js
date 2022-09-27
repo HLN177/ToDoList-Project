@@ -55,6 +55,19 @@ async function getTaskListHandler(req, res) {
   }
 }
 
+async function getTaskHandler(req, res) {
+  // 1. get taskId from params;
+  const {taskId} = req.params;
+  try {
+    // 2. get task
+    const task = await getTaskById(taskId);
+    // 3. send back task info
+    return res.send(task);
+  } catch (err) {
+    return res.status(404).send(err.message); // not found return 404
+  }
+}
+
 async function updateTaskHandler(req, res) {
   const newTask = {
     ...req.body
@@ -94,6 +107,7 @@ async function deleteTaskHandler(req, res) {
 module.exports = {
   createTaskHandler,
   getTaskListHandler,
+  getTaskHandler,
   updateTaskHandler,
   deleteTaskHandler,
 };

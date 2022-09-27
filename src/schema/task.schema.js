@@ -36,6 +36,10 @@ const createTaskSchema = object({
   ...payload
 });
 
+const getTaskSchema = object({
+  ...params
+});
+
 const updateTaskSchema = object({
   ...payload,
   ...params
@@ -47,6 +51,7 @@ const deleteTaskSchema = object({
 
 module.exports = {
   createTaskSchema,
+  getTaskSchema,
   updateTaskSchema,
   deleteTaskSchema
 };
